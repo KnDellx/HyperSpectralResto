@@ -1,0 +1,4 @@
+models/A4_P1500/model010000.pt
+checkpoints/I190000_E97_gen.pth
+config/abundance_models_config.yaml
+data/A4_P1500.npz

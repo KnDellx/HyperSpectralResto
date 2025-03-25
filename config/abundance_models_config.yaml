@@ -1,7 +1,7 @@
 # basic config
 baseconfig: 'configs/base.json'
 dataroot: 'data'  # 数据路径
-resume_state: 'checkpoints/diffusion/I190000_E97_gen.pth'  # 模型路径
+resume_state: 'checkpoints/I190000_E97_gen.pth'  # 模型路径
 
 model:
   in_channel: 3

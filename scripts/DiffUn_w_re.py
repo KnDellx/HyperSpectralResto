@@ -34,24 +34,25 @@ from skimage.metrics import structural_similarity as compare_ssim
 from skimage.metrics import peak_signal_noise_ratio as PSNR
 
 # 加载数据，npz文件
+# dist_util.dev() is used to get the current device
 def load_data(data_dir):
     data = np.load(data_dir)
     W = data["W"]
     H = data["H"]
     Y = data["Y"]
     X = data["X"]
-    A = data["A"]  # spectral library
+    A = data["A"]  
     sigma = data["sigma"]
     return W, H, X, sigma, Y, th.from_numpy(A).to(dist_util.dev()).float()
 
 def main():
     # 读取命令行参数, 生成一个字典
-    args = create_argparser().parse_args()  # 命令行读取参数
+    # 命令行读取参数
+    args = create_argparser().parse_args()  
     if args.model_config is not None:  # yaml文件读取参数
         upgrade_by_config(args)
 
     # 设置设备
-    GPU_ID = 1
     dist_util.setup_dist()
 
     filename = args.input_hsi  # 输入的hsi文件名字
@@ -69,10 +70,6 @@ def main():
     model_W, DiffUn = create_model_and_diffusion(
         **args_to_dict(endmember_config, model_and_diffusion_defaults().keys()) # 后续更改
     )
- 
-    # `create_model_and_diffusion` 是一个自定义函数，用于创建模型和扩散对象。
-    # `args_to_dict(args, model_and_diffusion_defaults().keys())` 将命令行参数 `args` 转换为字典，只保留 `model_and_diffusion_defaults()` 中定义的键。
-    # `**` 是字典解包操作符，将字典中的键值对作为关键字参数传递给 `create_model_and_diffusion` 函数。
 
     # 从指定路径加载模型的状态字典，并将其映射到 CPU 上
     model_path = endmember_config["model_path"]
@@ -83,11 +80,6 @@ def main():
 
     model_dict.update(pretrained_dict)
     model_W.load_state_dict(model_dict)
-       #dist_util.load_state_dict(model_path, map_location="cpu"))
-    #)  # 预训练模型路径
-    # `dist_util.load_state_dict` 是一个自定义函数，用于从指定路径加载模型的状态字典。
-    # `map_location="cpu"` 表示将加载的模型参数映射到 CPU 上。
-    # `model.load_state_dict` 方法将加载的状态字典应用到模型上，更新模型的参数。
 
     model_W.to(dist_util.dev())
     if args.use_fp16:

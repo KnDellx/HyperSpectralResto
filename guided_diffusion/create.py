@@ -15,8 +15,6 @@ def model_and_diffusion_RS_defaults():
 
 def create_model_and_diffusion_RS(opt):
     model = define_G(opt['model'])
-    # total_steps = opt['diffusion_setting']['diffusion_steps']
-
     diffusion = create_gaussian_diffusion(
         beta_schedule= opt['beta_schedule'],
         beta_linear_start= opt['beta_linear_start'],

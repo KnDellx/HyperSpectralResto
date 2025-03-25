@@ -86,7 +86,7 @@ class GaussianDiffusion:
         betas = np.array(betas, dtype=np.float64)
         self.betas = betas
         assert len(betas.shape) == 1, "betas must be 1-D"
-        assert (betas > 0).all() and (betas <= 1).all()
+        assert (betas > 0).all() and (betas <= 1).all()# ensure all the elements meet the standard
         self.num_timesteps = int(betas.shape[0])
         alphas = 1.0 - betas
         self.alphas_cumprod = np.cumprod(alphas, axis=0)
