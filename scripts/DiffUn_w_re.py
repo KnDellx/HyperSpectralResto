@@ -55,12 +55,11 @@ def main():
     # 设置设备
     dist_util.setup_dist()
 
-    filename = args.input_hsi  # 输入的hsi文件名字
-    filename = filename.split("/")[-1]  # 提取文件名，不包含路径
-    filename = filename.split(".")[:-1]  # 去除文件扩展名
-    filename = ".".join(filename)  # 重新构建文件名
+    filename = args.input_hsi 
+    filename = filename.split("/")[-1] 
+    filename = filename.split(".")[:-1]  
+    filename = ".".join(filename)  
     logger.configure(dir=bf.join(args.save_dir, f"{filename}"))
-    #logger.log(args)
 
     logger.log("creating model...")
 
@@ -68,9 +67,9 @@ def main():
     endmember_path = "config/endmember_models_config.yaml"
     endmember_config = load_yaml(endmember_path)
     model_W, DiffUn = create_model_and_diffusion(
-        **args_to_dict(endmember_config, model_and_diffusion_defaults().keys()) # 后续更改
+        **args_to_dict(endmember_config, model_and_diffusion_defaults().keys()) # 
     )
-
+    logger.log("")
     # 从指定路径加载模型的状态字典，并将其映射到 CPU 上
     model_path = endmember_config["model_path"]
     model_dict = model_W.state_dict()
@@ -150,7 +149,6 @@ def main():
     print("P",P.shape) # (6,3)
     print("H",H.shape) # (3,4096)
     rmse = hyper_utils.hyperRMSE(H, P)
-
     output_data = "L21: SAD ", str(meanDistance), str(Distance), "aRMSE: ", str(rmse)
     logger.log(output_data)
     SRE = 10*np.log10(np.sum((X_t)**2)/np.sum((H.T@sample - Y)**2))

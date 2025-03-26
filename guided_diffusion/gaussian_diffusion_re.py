@@ -1158,12 +1158,10 @@ def double_sample(
         )
         _H = _sampleH.cpu().detach().numpy()
         _H = (_H+1)/2
-
         _H = _H.reshape(Rr,Nn)  ###?????? 待修改
 
         _W = _sampleW.cpu().detach().numpy()[:,0]
         _W = (_W+1)/2
-      #
         _sre = 10*np.log10(np.sum((input_hsi)**2)/np.sum((_W.T@_H - input_hsi)**2))
 
         if progress:
@@ -1173,6 +1171,7 @@ def double_sample(
             W = _W
             H = _H
     return W, H 
+
 
 def double_sample_loop(
         model_W,
@@ -1356,6 +1355,7 @@ def double_sample_loop_progressive(
         _H = (_H+1)/2
 
         _H = _H.reshape(Rr, N)  ###?????? 待修改
+        
 
         _W = img_W.cpu().detach().numpy()[:,0]
         _W = (_W+1)/2
@@ -1366,8 +1366,3 @@ def double_sample_loop_progressive(
         if _psnr > best_psnr:
             best_psnr = _psnr 
     print("best psnr", best_psnr)
-    # import matplotlib.pyplot as plt
-    # plt.plot(psnr_list)
-    # plt.ylabel('PSNR')
-    # plt.savefig('psnr_plot.png')
-    # plt.show()
