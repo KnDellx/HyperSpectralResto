@@ -24,7 +24,8 @@ step: 20  # 采样步数
 
 # settings
 diffusion_steps: 1000
-beta_schedule: 'linear'
+beta_schedule: 'exp'
+# beta_schedule: 'linear'
 beta_linear_start: 1e-6
 beta_linear_end: 1e-2
 cosine_s: 8e-3

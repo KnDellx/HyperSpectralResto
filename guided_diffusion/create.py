@@ -23,6 +23,7 @@ def create_model_and_diffusion_RS(opt):
         k=opt['k'],
         steps=opt['diffusion_steps'],
     )
+    
     return model, diffusion
 
 
@@ -40,7 +41,7 @@ def create_gaussian_diffusion(
             n_timestep=steps,
             linear_start=beta_linear_start,
             linear_end=beta_linear_end,
-            cosine_s=cosine_s,
+            cosine_s=float(cosine_s),
             k=k,
         )
 

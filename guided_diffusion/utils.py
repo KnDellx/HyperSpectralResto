@@ -27,8 +27,6 @@ def make_beta_schedule(schedule, n_timestep,
         betas = np.linspace(linear_start ** 0.5, linear_end ** 0.5,
                             n_timestep, dtype=np.float64) ** 2
     elif schedule == 'linear':
-        # betas = np.linspace(linear_start, linear_end,
-        #                     n_timestep, dtype=np.float64)
         betas = np.linspace(linear_start, linear_end,
                             n_timestep, dtype=np.float64)
     elif schedule == 'warmup10':
@@ -50,37 +48,16 @@ def make_beta_schedule(schedule, n_timestep,
         alphas_cumprod = timesteps / (1 + cosine_s)
         alphas_cumprod = np.cos(alphas_cumprod * math.pi / 2) ** 2
         alphas_cumprod = alphas_cumprod / alphas_cumprod[0]
-        # alphas = timesteps / (1 + cosine_s)
-        # alphas = 1/(1+torch.exp((alphas*2-1)*4))
-        # alphas = (alphas - alphas.min()) / (alphas.max() - alphas.min())
         betas = 1 - alphas_cumprod[1:] / alphas_cumprod[:-1]
         betas = np.clip(betas, a_min=-1, a_max=0.999)
-        # betas = betas.clamp(max=0.999)
 
     elif schedule == "exp":
-        # betas = np.linspace(0.15, 0.155, n_timestep+1, dtype=np.float64) ** 2
-        # alphas_cumprod = np.cumprod(1 - betas)
-        # alphas_cumprod = np.flip(1 - alphas_cumprod)
         alphas_cumprod = np.exp(-k * np.arange(n_timestep + 1, dtype=np.float64) / n_timestep)
         alphas_cumprod = np.flip(1 - alphas_cumprod)
-        # alphas_cumprod = alphas_cumprod + np.exp(-k * (n_timestep + 1) / n_timestep)
-        # alphas_cumprod = (alphas_cumprod - alphas_cumprod.min()) / (alphas_cumprod.max() - alphas_cumprod.min()) * (1 - 1e-3) + 1e-3
         alphas_cumprod = (alphas_cumprod - alphas_cumprod.min()) / (alphas_cumprod.max() - alphas_cumprod.min())
-        # alphas_cumprod = alphas_cumprod * (1 - 0.9) + 0.9
         alphas_cumprod = alphas_cumprod * (1 - 1e-3) + 1e-3
-        # alphas_cumprod = np.r_[alphas_cumprod[:-1], [1e-3]]
-        # alphas_cumprod = alphas_cumprod * 0.9
-        # sigma = 50 / 255 * 2
-        # alphas_bar_T = 1 / (1 + 4 * sigma**2)
-        # alphas_cumprod = alphas_cumprod * (1 - alphas_bar_T) + alphas_bar_T
-        # plt.plot(alphas_cumprod)
-        # plt.show()
         alphas = alphas_cumprod[1:] / alphas_cumprod[:-1]
         betas = 1 - alphas
-
-        # alphas_cumprod = 1 - 1/(1+np.exp(-6*np.linspace(-1, 1, n_timestep+1)))
-        # alphas = alphas_cumprod[1:] / alphas_cumprod[:-1]
-        # betas = 1 - alphas
     elif schedule == "comb":
         timesteps = (
             torch.arange(n_timestep, dtype=torch.float64) /

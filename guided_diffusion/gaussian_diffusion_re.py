@@ -1349,7 +1349,7 @@ def double_sample_loop_progressive(
         
         # for the next step, sample = xt_next, pred_xtart = x0, xhat is x0 after clip.
         yield  out_W, out_H
-        img_W = out_W["sample"]  # out_W has other keys, but we don't them.
+        img_W = out_W["sample"]  
         img_H = out_H["sample"]  
         _H = img_H.cpu().detach().numpy()
         _H = (_H+1)/2

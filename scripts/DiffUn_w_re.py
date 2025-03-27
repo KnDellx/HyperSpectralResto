@@ -32,7 +32,8 @@ from guided_diffusion import gaussian_diffusion_re as gdre
 
 from skimage.metrics import structural_similarity as compare_ssim
 from skimage.metrics import peak_signal_noise_ratio as PSNR
-
+from utility import utils
+utils.seed_everywhere(8888)
 # 加载数据，npz文件
 # dist_util.dev() is used to get the current device
 def load_data(data_dir):
@@ -48,6 +49,7 @@ def load_data(data_dir):
 def main():
     # 读取命令行参数, 生成一个字典
     # 命令行读取参数
+    
     args = create_argparser().parse_args()  
     if args.model_config is not None:  # yaml文件读取参数
         upgrade_by_config(args)
@@ -118,7 +120,6 @@ def main():
 
     W_t, H_t, X_t, sigma, Y, _ = load_data(args.input_hsi)  # W_t (6, 224)  H_t (4096,6)  X_t (4096,224)  Y (4096,224)
     hyper_utils = UnmixingUtils(W_t.T, H_t)  # 真实的endmember和abundance
-
     logger.log("creating samples...")
     SRE = 0  # 重构误差
     R = 3  # diffusion的纬度
@@ -148,9 +149,10 @@ def main():
     plt.savefig(bf.join(logger.get_dir(), f"W.png"), dpi=500)
     print("P",P.shape) # (6,3)
     print("H",H.shape) # (3,4096)
-    rmse = hyper_utils.hyperRMSE(H, P)
-    output_data = "L21: SAD ", str(meanDistance), str(Distance), "aRMSE: ", str(rmse)
-    logger.log(output_data)
+    armse = hyper_utils.hyperRMSE(H, P)[-1]
+    SAD = meanDistance 
+    logger.log("SAD: ",SAD)
+    logger.log("aRMSE: ", armse)
     SRE = 10*np.log10(np.sum((X_t)**2)/np.sum((H.T@sample - Y)**2))
     logger.log("SNR: ", SRE)
     SAM = np.mean(np.arccos(np.sum(X_t * (H.T@sample), axis=1)/np.linalg.norm(X_t, axis=1)/np.linalg.norm(H.T@sample, axis=1)))
