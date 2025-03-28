@@ -49,6 +49,15 @@ def get_named_beta_schedule(schedule_name, num_diffusion_timesteps):
             num_diffusion_timesteps,
             lambda t: math.cos((t + 0.008) / 1.008 * math.pi / 2) ** 2,
         )
+    elif schedule_name == "exp":
+        k = 8
+        alphas_cumprod = np.exp(-k * np.arange(num_diffusion_timesteps + 1, dtype=np.float64) / num_diffusion_timesteps)
+        alphas_cumprod = np.flip(1 - alphas_cumprod)
+        alphas_cumprod = (alphas_cumprod - alphas_cumprod.min()) / (alphas_cumprod.max() - alphas_cumprod.min())
+        alphas_cumprod = alphas_cumprod * (1 - 1e-3) + 1e-3
+        alphas = alphas_cumprod[1:] / alphas_cumprod[:-1]
+        betas = 1 - alphas
+        return betas
     else:
         raise NotImplementedError(f"unknown beta schedule: {schedule_name}")
 

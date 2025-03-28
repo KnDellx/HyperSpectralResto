@@ -63,17 +63,8 @@ def cal_gradient(W, H, Y, bar_alpha, alpha, var, t, mask, type="denoise", __cach
         row_sums = th.sum(H, axis=1, keepdims=True)
         grad_asc = 2 * (row_sums - 1)
 
-        # grad_one = th.zeros_like(H)
-        # mask = H <= 0
-        # grad_one[mask] = 2 * H[mask]
-
     else:
         raise NotImplementedError
-    # assert not th.isnan(delta_W),th.isnan(delta_H)
-
-    # print("ED", grad_ed)
-    # print("ASC",0 grad_asc)
-
     grad_W = grad_W[:, None] * delta_W #+ (-0.1)*grad_ed[:, None] 
     grad_H = grad_H[:, None] * delta_H + (-0.1)*grad_asc[:, None] 
 

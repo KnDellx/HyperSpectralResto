@@ -2,3 +2,9 @@ models/A4_P1500/model010000.pt
 checkpoints/I190000_E97_gen.pth
 config/abundance_models_config.yaml
 data/A4_P1500.npz
+data/WDC.npz
+data/Samson/samson_1.mat
+.gitignore
+data/Samson/GroundTruth/end3_Abundances.fig
+data/Samson/GroundTruth/end3_Materials.fig
+data/Samson/GroundTruth/end3.mat

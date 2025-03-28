@@ -1,5 +1,4 @@
 import sys
-
 import os
 # 获取当前脚本的绝对路径（/scripts/DiffUn_w_re.py）
 current_script_path = os.path.abspath(__file__)
@@ -7,15 +6,13 @@ current_script_path = os.path.abspath(__file__)
 project_root = os.path.dirname(os.path.dirname(current_script_path))
 # 将根目录加入模块搜索路径
 sys.path.insert(0, project_root)
-
 import argparse
-
 import blobfile as bf
 import numpy as np
 import torch as th
 import yaml
+import scipy.io as sio
 import matplotlib.pyplot as plt
-
 from guided_diffusion import dist_util, logger
 from guided_diffusion.script_util import (
     model_and_diffusion_defaults,
@@ -23,17 +20,19 @@ from guided_diffusion.script_util import (
     args_to_dict,
     add_dict_to_argparser,
 )
-
 from guided_diffusion.create import create_model_and_diffusion_RS
-
 from unmixing_utils import UnmixingUtils, denoising_fn
-
 from guided_diffusion import gaussian_diffusion_re as gdre
-
 from skimage.metrics import structural_similarity as compare_ssim
 from skimage.metrics import peak_signal_noise_ratio as PSNR
 from utility import utils
-utils.seed_everywhere(8888)
+utils.seed_everywhere(42)
+
+
+
+
+
+
 # 加载数据，npz文件
 # dist_util.dev() is used to get the current device
 def load_data(data_dir):
@@ -110,19 +109,28 @@ def main():
     if args.use_fp16:
         model_H.convert_to_fp16()
     model_H.eval()
-
-    # 加载WDC数据
-    # data = np.load(args.input_hsi)
-    # X_t = data["X"]  # (256, 256, 124)
-    # Y = data["Y"]       # (256, 256, 124)
-    # X_t = X_t.reshape(256*256, 124)
-    # Y = Y.reshape(256*256, 124)
-
+    '''
+    ##load WDC data
+    data = np.load(args.input_hsi)
+    X_t = data["X"]  # (256, 256, 124)
+    Y = data["Y"]       # (256, 256, 124)
+    X_t = X_t.reshape(256*256, 124)
+    Y = Y.reshape(256*256, 124)
+    
+    '''
+    
+    '''
     W_t, H_t, X_t, sigma, Y, _ = load_data(args.input_hsi)  # W_t (6, 224)  H_t (4096,6)  X_t (4096,224)  Y (4096,224)
+
+    '''
+    input_data = sio.loadmat(args.input_hsi)
+    print(th.from_numpy(next(iter(input_data['V']))).shape[0])
+    import pdb;pdb.set_trace()
+    
     hyper_utils = UnmixingUtils(W_t.T, H_t)  # 真实的endmember和abundance
     logger.log("creating samples...")
-    SRE = 0  # 重构误差
-    R = 3  # diffusion的纬度
+    SRE = 0 
+    R = 3 
 
     # 核心函数
     sample, H = gdre.double_sample(
