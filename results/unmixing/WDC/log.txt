@@ -1,3 +1,0 @@
-Logging to results/unmixing/WDC
-creating model...
-

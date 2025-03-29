@@ -16,7 +16,7 @@ model:
 eta1: 80 #    args.eta1 *= 256*64  args.eta2 *= 8*64
 eta2: 2
 k: 8
-step: 100  # 采样步数
+step: 20  # 采样步数
 
 # 
 # task: "denoise"
@@ -24,8 +24,7 @@ step: 100  # 采样步数
 
 # settings
 diffusion_steps: 1000
-beta_schedule: 'exp'
-# beta_schedule: 'linear'
+beta_schedule: 'linear'
 beta_linear_start: 1e-6
 beta_linear_end: 1e-2
 cosine_s: 8e-3

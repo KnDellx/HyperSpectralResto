@@ -237,6 +237,13 @@ class UNet(nn.Module):
         self.final_conv = Block(pre_channel, default(out_channel, in_channel), groups=norm_groups)
 
     def forward(self, x, time, feat_need=False):
+        # padding(add)
+        original_h, original_w = x.shape[2:]
+        pad_h = 96 - original_h
+        pad_w = 96 - original_w
+        import torch.nn.functional as F
+        x = F.pad(x, (0, pad_w, 0, pad_h))
+        
         t = self.noise_level_mlp(time) if exists(
             self.noise_level_mlp) else None
 
@@ -274,10 +281,12 @@ class UNet(nn.Module):
                     fd.append(x)
             else:
                 x = layer(x)
-
-        # Final Diffusion layer
+                
         x = self.final_conv(x)
-
+        x = x[:, :, :original_h, :original_w]
+        
+        # Final Diffusion layer
+    
         # Output encoder and decoder features if feat_need
         if feat_need:
             return fe, Reverse(fd)

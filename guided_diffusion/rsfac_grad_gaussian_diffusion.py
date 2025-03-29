@@ -338,9 +338,8 @@ class GaussianDiffusion:
         noise_level = th.FloatTensor([self.alphas_cumprod_prev[int(t.item()) + 1]]).repeat(B, 1).to(x.device)
         noise_level_next = th.FloatTensor([self.alphas_cumprod_prev[int(t_next.item()) + 1]]).repeat(B, 1).to(x.device)
         model_output = model(x, noise_level)
-        # print(th.isnan(noise_level_next).any())
-        # print(th.isnan(model_output).any())
-
+        
+        # test the shape of three inputs
         pred_xstart = (x - model_output * (1 - noise_level).sqrt()) / (noise_level.sqrt()+eps)
         if clip_denoised:
             pred_xstart = pred_xstart.clamp(-1, 1)

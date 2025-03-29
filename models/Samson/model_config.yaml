@@ -1,5 +1,6 @@
+
 model_path: "models/A4_P1500/model010000.pt"
-image_size: 156
+image_size: 224
 class_cond: False
 learn_sigma: False
 num_channels: 64

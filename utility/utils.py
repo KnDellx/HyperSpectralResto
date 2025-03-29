@@ -42,7 +42,12 @@ def torch2numpy(hsi, use_2dconv):
 
 
 
-
+'''
+design a function to visualize the hyperspectral image
+'''
+def plot(hyper_data):
+    plt.figure(figsize=(20, 10))
+    pass
 def seed_everywhere(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)

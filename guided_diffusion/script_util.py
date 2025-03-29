@@ -474,6 +474,8 @@ def create_1d_model(
             channel_mult = (1, 2, 4)
         elif seq_len == 224:
             channel_mult = (1, 1, 2, 3, 4)
+        elif seq_len == 156:
+            channel_mult =(1, 2, 4)
         elif seq_len ==124:
             channel_mult = (1, 2, 3, 4)
         else:

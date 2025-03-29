@@ -1,0 +1,8 @@
+Logging to results/unmixing/Samson/Samson
+creating model...
+
+SAD:  0.1730921643931073
+aRMSE:  0.2694434137028935
+SNR:  34.3369736707029
+SAM:  0.05172940558353541
+sampling complete
